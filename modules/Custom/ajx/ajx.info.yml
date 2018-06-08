@@ -1,0 +1,8 @@
+name: AJX
+type: module
+description: 'Bla bla bla'
+core: 8.x
+package: 'Custom'
+
+dependencies:
+  - drupal:node

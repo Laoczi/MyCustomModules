@@ -1,0 +1,12 @@
+name: Ajax Login
+type: module
+description: This module gives a possibility to login and register by Ajax
+# core: 8.x
+package: Login
+configure: ajax_login.settings
+
+# Information added by Drupal.org packaging script on 2017-10-12
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'ajaxlogin'
+datestamp: 1507795320

@@ -1,0 +1,7 @@
+ajx.form:
+ path: '/form2'
+ defaults:
+  _form: '\Drupal\ajx\Form\AjxForm'
+  _title: 'Bla'
+ requirements:
+    _permission: 'access content'
