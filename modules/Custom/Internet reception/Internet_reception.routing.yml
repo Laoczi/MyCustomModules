@@ -1,8 +1,0 @@
-Internet_reception.form:
-  path: '/form'
-  defaults:
-    _form: '\Drupal\Internet_reception\Form\FormGen'
-    _title: 'Internet reception'
-  requirements:
-    _permission: 'access content'
-

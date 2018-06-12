@@ -1,6 +1,0 @@
-ajax_login.library:
-  css:
-    base:
-      css/ajax-example-base.css: {}
-  js:
-    js/ajax-example.js: {}

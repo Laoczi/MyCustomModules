@@ -1,22 +1,30 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
 
-function ajax_login_form_user_login_form_alter (&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+/**
+ * @file
+ * Change the user login form and make ajax response.
+ *
+ * Make hook for basic form - user_basic_form. Make ajax validation response.
+ * Get hello message or message about incorrect data.
+ */
 
-
-
-    $form['system_messages'] = [
-        '#markup' => '<div id="box">123</div>',
-        '#weight' => -100,
-    ];
-    $form['actions']['submit']['#ajax'] = [
-        'callback' => 'Drupal\ajax_login\MyAjaxLogin\MyAjaxLogin::MyAjaxSubmit',
-        'wrapper' => 'box',
-        'event' => 'click',
-        'progress' => [
-            'type' => 'throbber',
-        ],
-    ];
+/**
+ * Implements  hook_form_BASE_FORM_ID_alter().
+ */
+function ajax_login_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['system_messages'] = [
+    '#markup' => '<div id="box"></div>',
+    '#weight' => -100,
+  ];
+  $form['actions']['submit']['#ajax'] = [
+    'callback' => 'Drupal\ajax_login\AjaxLogin\AjaxLogin::AjaxSubmit',
+    'wrapper' => 'box',
+    'event' => 'click',
+    'progress' => [
+      'type' => 'throbber',
+    ],
+  ];
 
 }
-
