@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
-
 /**
  * @file
  * Change the user login form and make ajax response.
@@ -10,17 +8,21 @@ use Drupal\Core\Form\FormStateInterface;
  * Get hello message or message about incorrect data.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements  hook_form_BASE_FORM_ID_alter().
  */
 function ajax_login_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $form['system_messages'] = [
+
+  $form['status_messages'] = [
     '#markup' => '<div id="box"></div>',
     '#weight' => -100,
   ];
+  $form['name']['#prefix'] = '<div id="login_form_hidden">';
+  $form['actions']['submit']['#suffix'] = '</div>';
   $form['actions']['submit']['#ajax'] = [
-    'callback' => 'Drupal\ajax_login\AjaxLogin\AjaxLogin::AjaxSubmit',
-    'wrapper' => 'box',
+    'callback' => 'Drupal\ajax_login\AjaxLogin\AjaxLogin::ajaxSubmit',
     'event' => 'click',
     'progress' => [
       'type' => 'throbber',

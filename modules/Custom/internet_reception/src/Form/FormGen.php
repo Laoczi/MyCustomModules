@@ -13,8 +13,22 @@ use Drupal\Core\Language\LanguageManagerInterface;
  */
 class FormGen extends FormBase {
 
+  /**
+   * The mail manager service.
+   *
+   * We need this for send the mail.
+   *
+   * @var \Drupal\Core\Mail\MailManagerInterface
+   */
   protected $mailManager;
 
+  /**
+   * The language manager service.
+   *
+   * We need this for change language if necessary.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
   protected $languageManager;
 
   /**
@@ -67,6 +81,7 @@ class FormGen extends FormBase {
       '#type' => 'textfield',
       '#title' => t('Your name:'),
       '#required' => TRUE,
+      '#min' => 2,
     ];
     $form['email'] = [
       '#type' => 'email',
@@ -77,6 +92,7 @@ class FormGen extends FormBase {
       '#type' => 'number',
       '#title' => t('Your age:'),
       '#required' => TRUE,
+      '#min' => 10,
     ];
     $form['subject'] = [
       '#type' => 'textfield',

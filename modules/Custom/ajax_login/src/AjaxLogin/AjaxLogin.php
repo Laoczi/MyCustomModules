@@ -6,6 +6,8 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 class AjaxLogin {
 
@@ -18,59 +20,45 @@ class AjaxLogin {
    * @return AjaxResponse
    *   Return AjaxResponse after submit the form.
    */
-  function AjaxSubmit (array &$form, FormStateInterface $form_state) {
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
     $response = new AjaxResponse();
-    $opacity = 0;
+    $url = Url::fromUserInput('/');
+    $link = Link::fromTextAndUrl(t('link'), $url)->toString();
     $user = $form_state->getValue('name');
+    $pass = $form_state->getValue('pass');
+    $opacity = 0;
+    $messenger = \Drupal::messenger();
 
-    if (user_load_by_name($form_state->getValue('name')) &&
-      $form_state->getValue('name') != FALSE) {
-      $response
-        ->addCommand(new HtmlCommand('#box', 'Hello, ' . $user .
-          '! To see the website as a registered user go to this 
-                     <a href="http://phpmodule2.test/"> link</a>'));
+    if (\Drupal::service('user.auth')->authenticate($user, $pass) !== FALSE) {
+      $messenger->deleteAll();
+      $message =
+        t("Hello, $user! To see the website as a registered user go to this $link ");
+      $messenger->addMessage($message);
+      $message = [
+        '#theme' => 'status_messages',
+        '#message_list' => \Drupal::messenger()->all(),
+      ];
+      $response->addCommand(new HtmlCommand('#box', $message));
       $response
         ->addCommand(new InvokeCommand
-        ('#box', 'css', [
-          'color',
-          'black',
-        ]));
-
-      $response
-        ->addCommand(new InvokeCommand
-        ('.js-form-item', 'css', [
-          'opacity',
-          $opacity,
-        ]));
-
-      $response
-        ->addCommand(new InvokeCommand
-        ('#block-bartik-local-tasks', 'css', [
-          'opacity',
-          $opacity,
-        ]));
-
-      $response
-        ->addCommand(new InvokeCommand
-        ('#edit-submit', 'css', [
+        ('#login_form_hidden', 'css', [
           'opacity',
           $opacity,
         ]));
     }
-    else {
-      $response
-        ->addCommand(new HtmlCommand('#box', 'Incorrect login and/or password'));
 
-      $response
-        ->addCommand(new InvokeCommand
-        ('#box', 'css', [
-          'color',
-          'red',
-        ]));
+    else {
+      $messenger->deleteAll();
+      $message = t('Incorrect login and/or password');
+      $messenger->addError($message);
+      $message = [
+        '#theme' => 'status_messages',
+        '#message_list' => \Drupal::messenger()->all(),
+      ];
+      $response->addCommand(new HtmlCommand('#box', $message));
     }
 
     return $response;
   }
 
 }
-
