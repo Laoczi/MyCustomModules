@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * This module enables the form for contact with administration.
+ *
+ * Module generate the form on page ( path: /internet_reception ).
+ * All user can send email to administrator.
+ */
+
+/**
+ * Implements hook_mail().
+ */
+function internet_reception_mail($key, &$message, $params) {
+  $options = [
+    'langcode' => $message['langcode'],
+  ];
+
+  switch ($key) {
+
+    case 'contact_message':
+
+      $message['subject'] = t('New email - @subject from @email', [
+        '@subject' => $params['subject'],
+        '@email' => $params['email'],
+      ], $options);
+      $message['body'][] =
+        t('New form: <br><br> Name:@name <br> Age:@age <br> Message: @message', [
+          '@name' => $params['name'],
+          '@age' => $params['age'],
+          '@message' => $params['message'],
+        ], $options);
+
+      break;
+  }
+}
