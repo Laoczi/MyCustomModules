@@ -1,0 +1,14 @@
+modal_messenger:
+  version: 1.x
+  js:
+    js/drag_modal_messenger.js: {}
+    js/modal_messenger.js: {}
+
+  css:
+    theme:
+      css/modal_messenger.css: {}
+
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupalSettings

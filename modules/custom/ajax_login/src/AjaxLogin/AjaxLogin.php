@@ -9,12 +9,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
-/**
- *
- * Change Login form to ajax.
- *
- * */
-
 class AjaxLogin {
 
   /**
@@ -52,6 +46,7 @@ class AjaxLogin {
           $opacity,
         ]));
     }
+
     else {
       $messenger->deleteAll();
       $message = t('Incorrect login and/or password');

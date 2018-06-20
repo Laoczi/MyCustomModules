@@ -1,0 +1,6 @@
+name: Modal Messenger
+type: module
+description: Get status messages in modal window.
+package: Custom
+core: 8.x
+configure: modal_messenger.admin_settings

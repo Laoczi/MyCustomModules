@@ -81,6 +81,7 @@ class FormGen extends FormBase {
       '#type' => 'textfield',
       '#title' => t('Your name:'),
       '#required' => TRUE,
+      '#min' => 2,
     ];
     $form['email'] = [
       '#type' => 'email',
@@ -91,7 +92,7 @@ class FormGen extends FormBase {
       '#type' => 'number',
       '#title' => t('Your age:'),
       '#required' => TRUE,
-      '#min' => 0,
+      '#min' => 10,
     ];
     $form['subject'] = [
       '#type' => 'textfield',

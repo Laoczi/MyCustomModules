@@ -1,0 +1,7 @@
+modal_messenger.admin_settings:
+  path: '/admin/config/modal_messenger'
+  defaults:
+    _form: '\Drupal\modal_messenger\Form\ModalMessengerSettingsForm'
+    _title: 'Messenger window configuration'
+  requirements:
+    _permission: 'administer site configuration'

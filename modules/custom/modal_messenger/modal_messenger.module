@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Open messenger in modal window.
+ *
+ * This module create custom block, where status messages are provides.
+ * Open all status message in modal window.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function modal_messenger_theme($existing, $type, $theme, $path) {
+  return [
+    'modal_messenger' => [
+      'variables' => [
+        'message' => [],
+        'background' => 'white',
+        'width' => '400',
+        'height' => '500',
+      ],
+      'template' => 'modal-messenger',
+      'file' => '',
+    ],
+  ];
+}
+
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function template_preprocess_modal_messenger(&$variables) {
+
+  $message = &$variables['message'];
+  $background = &$variables['background'];
+  $width = &$variables['width'];
+  $height = &$variables['height'];
+
+  $config = \Drupal::config('modal_messenger.settings');
+  $message = [
+    '#theme' => 'status_messages',
+    '#message_list' => \Drupal::messenger()->all(),
+  ];
+  $background = $config->get('background');
+  $width = $config->get('width');
+  $height = $config->get('height');
+
+}

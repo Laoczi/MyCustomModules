@@ -1,0 +1,18 @@
+
+{% block messenger %}
+    {% if message is not empty %}
+        {{ attach_library('modal_messenger/modal_messenger') }}
+        <div class="overlay"></div>
+        <div id="modal_messenger_window"
+             style="width:{{ width }}px; height:{{ height }}px; background:{{ background }};">
+
+            <button id="close_button">X</button>
+            <h2>Status messages</h2>
+            <div class="message-area">
+                {{ message }}
+            </div>
+
+        </div>
+
+    {% endif %}
+{% endblock messenger %}
