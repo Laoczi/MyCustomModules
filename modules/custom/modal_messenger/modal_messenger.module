@@ -21,7 +21,7 @@ function modal_messenger_theme($existing, $type, $theme, $path) {
         'height' => '500',
       ],
       'template' => 'modal-messenger',
-      'file' => '',
+      'override preprocess functions:' => 'false',
     ],
   ];
 }

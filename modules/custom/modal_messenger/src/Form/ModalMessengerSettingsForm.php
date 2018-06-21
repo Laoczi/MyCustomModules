@@ -45,14 +45,14 @@ class ModalMessengerSettingsForm extends ConfigFormBase {
 
     $form['width'] = [
       '#type' => 'number',
-      '#min' => '100',
+      '#min' => '300',
       '#max' => '1000',
       '#title' => $this->t('Width'),
       '#default_value' => $config->get('width'),
     ];
     $form['height'] = [
       '#type' => 'number',
-      '#min' => '100',
+      '#min' => '200',
       '#max' => '1000',
       '#title' => $this->t('Height'),
       '#default_value' => $config->get('height'),

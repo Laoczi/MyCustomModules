@@ -4,6 +4,8 @@ namespace Drupal\modal_messenger\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\MessagesBlockPluginInterface;
+use Drupal\Core\Cache\Cache;
+
 
 /**
  * Provides a block to display the messages.
