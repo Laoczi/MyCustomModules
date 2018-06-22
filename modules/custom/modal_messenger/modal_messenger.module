@@ -15,13 +15,13 @@ function modal_messenger_theme($existing, $type, $theme, $path) {
   return [
     'modal_messenger' => [
       'variables' => [
-        'message' => [],
+        'message_list' => [],
         'background' => 'white',
         'width' => '400',
         'height' => '500',
+        'count' => '1',
       ],
       'template' => 'modal-messenger',
-      'override preprocess functions:' => 'false',
     ],
   ];
 }
@@ -31,16 +31,17 @@ function modal_messenger_theme($existing, $type, $theme, $path) {
  */
 function template_preprocess_modal_messenger(&$variables) {
 
-  $message = &$variables['message'];
+  $message_list = &$variables['message_list'];
   $background = &$variables['background'];
   $width = &$variables['width'];
   $height = &$variables['height'];
 
   $config = \Drupal::config('modal_messenger.settings');
-  $message = [
-    '#theme' => 'status_messages',
-    '#message_list' => \Drupal::messenger()->all(),
+  $message_list = [
+    '#type' => 'status_messages',
+    '#message_list' => Drupal::service('messenger')->all(),
   ];
+  kint($message_list);
   $background = $config->get('background');
   $width = $config->get('width');
   $height = $config->get('height');

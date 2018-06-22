@@ -1,5 +1,6 @@
-{% block messenger %}
-    {% if message is not empty %}
+
+    {% if message_list is not empty %}
+        {% block messenger %}
 
         {{ attach_library('modal_messenger/modal_messenger') }}
 
@@ -8,10 +9,11 @@
              style="width:{{ width }}px; height:{{ height }}px; background:{{ background }};">
             <button id="close_button">X</button>
             <div id="title"><h2>Status messages</h2></div>
+
             <div class="message-area">
-                {{ message }}
+                {{ message_list }}
             </div>
         </div>
+        {% endblock messenger %}
     {% endif %}
-{% endblock messenger %}
 
