@@ -1,0 +1,6 @@
+name: Discount code
+type: module
+description: Generate discount code for new  register users.
+package: Custom
+core: 8.x
+

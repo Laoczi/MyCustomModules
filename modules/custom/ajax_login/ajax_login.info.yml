@@ -1,5 +1,5 @@
 name: Ajax Log in
-type: module
 description: Change Log In form to AJAX.
+type: module
 core: 8.x
 package: Custom
