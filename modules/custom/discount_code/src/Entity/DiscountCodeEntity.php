@@ -35,8 +35,7 @@ class DiscountCodeEntity extends ContentEntityBase {
       ->setDescription(t('User ID'))
       ->setSetting('target_type', 'user')
       ->setRevisionable(TRUE)
-      ->setSetting('handler', 'default')
-      ->setTranslatable(TRUE);
+      ->setSetting('handler', 'default');
 
     $fields['discount'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Code'))

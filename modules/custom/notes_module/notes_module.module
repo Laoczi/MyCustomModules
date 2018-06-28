@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_test_entity_type_insert().
+ */
+function notes_module_test_notes_insert() {
+
+}

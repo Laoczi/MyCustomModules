@@ -1,0 +1,5 @@
+name: Notes module
+description: Create custom content type - Notes.
+type: module
+package: Custom
+core: 8.x

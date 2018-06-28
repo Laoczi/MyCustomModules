@@ -1,0 +1,33 @@
+# core.entity_form_display.node.notes.default.yml
+langcode: en
+status: true
+dependencies:
+    config:
+        - field.field.node.notes.body
+        - field.field.node.notes.note_status
+        - node.type.notes
+    module:
+        - file
+        - text
+        - user
+id: node.notes.default
+targetEntityType: node
+bundle: notes
+mode: default
+content:
+    body:
+        label: hidden
+        type: text_textarea_with_summary
+        weight: 101
+        settings: {  }
+        third_party_settings: {  }
+    notes_status:
+        label: hidden
+        type: Boolean
+        weight: 102
+        settings: {  }
+        third_party_settings: {  }
+
+    links:
+        weight: 100
+hidden: {  }

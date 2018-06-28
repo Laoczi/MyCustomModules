@@ -98,17 +98,15 @@ function discount_code_token_info() {
 function discount_code_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = [];
 
-  $query1 = \Drupal::database()->select('users_field_data', 'ufd');
-  $query1->addField('ufd', ' name');
-  $query1->orderBy('name', 'DESC');
-  $username = $query1->execute()->fetchField();
+  $q = \Drupal::database()->select('users_field_data', 'ufd');
+  $q->addField('ufd', 'name');
+  $q->orderBy('uid', 'DESC');
+  $username = $q->execute()->fetchField();
 
-  $query2 = \Drupal::database()->select('discount_code', ' dc');
-  $query2->addField('dc', 'discount');
-  $query2->orderBy('discount', 'ASC');
-  $query2->range(1, 1);
-  $code = $query2->execute()->fetchField();
-
+  $q2 = \Drupal::database()->select('discount_code', 'dc');
+  $q2->addField('dc', 'discount');
+  $q2->orderBy('uid', 'DESC');
+  $code = $q2->execute()->fetchField();
   foreach ($tokens as $name => $original) {
     switch ($name) {
       case 'discount-code':

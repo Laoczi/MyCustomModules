@@ -1,0 +1,7 @@
+notes_module.admin_settings:
+  path: '/admin/config/notes_settings'
+  defaults:
+    _form: '\Drupal\notes_module\Form\NotesSettingsForm'
+    _title: 'Notes status settings'
+  requirements:
+       _permission: 'administer site configuration'

@@ -1,0 +1,22 @@
+# field.field.node.notes.body.yml
+langcode: en
+status: true
+dependencies:
+    config:
+        - field.storage.node.body
+        - node.type.notes
+    module:
+        - text
+id: node.notes.body
+field_name: body
+entity_type: node
+bundle: notes
+label: Body
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+    display_summary: true
+field_type: text_with_summary
