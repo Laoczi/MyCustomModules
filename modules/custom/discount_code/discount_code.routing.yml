@@ -1,8 +1,22 @@
 discount_code.admin_settings:
-  path: '/admin/config/discount_code'
-  defaults:
-    _form: '\Drupal\discount_code\Form\DiscountSettingsForm'
-    _title: 'Discount code configuration'
-  requirements:
-    _permission: 'administer site configuration'
+ path: '/admin/config/discount'
+ defaults:
+   _form: '\Drupal\discount_code\Form\DiscountCodeSettingsForm'
+   _title: 'Message settings.'
+ requirements:
+   _permission: 'administer site configuration'
 
+discount_code.admin_config:
+ path: '/admin/config/discount-settings'
+ defaults:
+   _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+   _title: 'Discount code settings.'
+ requirements:
+   _permission: 'access administration pages'
+
+discount_code.discount_page:
+  path: '/user/discount'
+  defaults:
+    _controller: '\Drupal\discount_code\Controller\PageController:page'
+  requirements:
+    _permission: 'access content'

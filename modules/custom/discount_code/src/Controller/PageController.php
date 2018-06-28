@@ -4,11 +4,18 @@ namespace Drupal\discount_code\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
-class DiscountPage extends ControllerBase {
+/**
+ * Class PageController.
+ *
+ * @package Drupal\discount\Controller
+ */
+class PageController extends ControllerBase {
 
-  function page() {
-    $config = \Drupal::config('userDiscountCode.settings');
-
+  /**
+   * Generate page.
+   */
+  public function page() {
+    $config = \Drupal::config('user_discount_code.settings');
     $token_service = \Drupal::token();
     $message = $token_service->replace($config->get('message'));
 
@@ -16,6 +23,6 @@ class DiscountPage extends ControllerBase {
       '#theme' => 'discount_page',
       '#message' => $message,
     ];
-
   }
+
 }

@@ -1,0 +1,138 @@
+<?php
+/**
+ * @file
+ *
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+
+/**
+ * Implements hook_theme().
+ */
+function discount_code_theme() {
+  return [
+    'discount_page' => [
+      'variables' => [
+        'message' => [],
+      ],
+      'template' => 'discount-page',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function discount_code_user_insert(EntityInterface $entity) {
+
+  $code = generate_code();
+
+  $query = \Drupal::database()->insert('discount_code');
+  $query->fields([
+    'uid',
+    'discount',
+  ]);
+  $query->values([
+    $entity->id(),
+    $code,
+  ]);
+  $query->execute();
+}
+
+/**
+ * Generate discount code for new user.
+ */
+function generate_code() {
+  $space = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $code = '';
+  $max = strlen($space);
+  for ($i = 0; $i < 10; ++$i) {
+    $code .= $space[random_int(0, $max)];
+  }
+
+  $query = Drupal::database()->select('discount_code', 'discount_code');
+  $query->addField('discount_code', 'discount');
+  $codes = $query->execute()->fetchCol();
+
+  foreach ($codes as $item) {
+    if ($item == $code) {
+      return $code = generate_code();
+    }
+  }
+
+  return $code;
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function discount_code_token_info() {
+  $type = [
+    'name' => t('Discount code'),
+    'description' => t('Discount code token'),
+  ];
+  $discount['discount-code'] = [
+    'name' => t('Discount code'),
+    'description' => t('Discount code for user'),
+  ];
+  $username['username'] = [
+    'name' => t('Username'),
+    'description' => t('Username'),
+  ];
+  return [
+    'types' => ['discount' => $type],
+    'tokens' => [
+      'discount' => [
+        'discount-code' => $discount['discount-code'],
+        'username' => $username['username'],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function discount_code_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $replacements = [];
+
+  $query1 = \Drupal::database()->select('users_field_data', 'ufd');
+  $query1->addField('ufd', ' name');
+  $query1->orderBy('name', 'DESC');
+  $username = $query1->execute()->fetchField();
+
+  $query2 = \Drupal::database()->select('discount_code', ' dc');
+  $query2->addField('dc', 'discount');
+  $query2->orderBy('discount', 'ASC');
+  $query2->range(1, 1);
+  $code = $query2->execute()->fetchField();
+
+  foreach ($tokens as $name => $original) {
+    switch ($name) {
+      case 'discount-code':
+        $replacements[$original] = $code;
+        break;
+
+      case 'username':
+        $replacements[$original] = $username;
+        break;
+    }
+  }
+  return $replacements;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function discount_code_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['actions']['submit']['#submit'][] = 'discount_code_form_submit';
+}
+
+/**
+ * Custom submit handler for login form.
+ */
+function discount_code_form_submit($form, FormStateInterface $form_state) {
+  $form_state->setRedirect('discount_code.discount_page');
+}

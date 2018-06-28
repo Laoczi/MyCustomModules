@@ -5,40 +5,42 @@ namespace Drupal\discount_code\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-class DiscountSettingForm extends ConfigFormBase {
+/**
+ * Class DiscountCodeSettingsForm.
+ *
+ * @package Drupal\discount\Form
+ */
+class DiscountCodeSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['DiscountCode.settings'];
+    return ['user_discount_code.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'discount_code_settings_form';
+    return 'user_discount_code';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('DiscountCode.settings');
+    $config = $this->config('user_discount_code.settings');
 
     $form['help_text'] = [
       '#type' => 'item',
       '#title' => 'Help',
-      '#markup' => 'Use [discount:username] to show user name and [discount:discount-code] to show code.',
+      '#markup' => '[discount:username] to show user name <br>
+                    [discount:discount-code] to show code.',
     ];
-    $form['title'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Title'),
-      '#default_value' => $config->get('title'),
-    ];
+
     $form['message'] = [
-      '#type' => 'textfield',
+      '#type' => 'textarea',
       '#title' => $this->t('Message'),
       '#default_value' => $config->get('message'),
     ];
@@ -50,8 +52,7 @@ class DiscountSettingForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    \Drupal::configFactory()->getEditable('DiscountCode.settings')
-      ->set('title', $form_state->getValue('title'))
+    \Drupal::configFactory()->getEditable('user_discount_code.settings')
       ->set('message', $form_state->getValue('message'))
       ->save();
     parent::submitForm($form, $form_state);
