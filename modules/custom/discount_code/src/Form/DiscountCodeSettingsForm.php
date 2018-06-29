@@ -30,19 +30,11 @@ class DiscountCodeSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('user_discount_code.settings');
-
-    $form['help_text'] = [
-      '#type' => 'item',
-      '#title' => 'Help',
-      '#markup' => '[discount:username] to show user name <br>
-                    [discount:discount-code] to show code.',
-    ];
-
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message'),
-      '#default_value' => $config->get('message'),
+      '#description' => '[discount:username] to show user name <br>
+                         [discount:discount-code] to show code.',
     ];
 
     return parent::buildForm($form, $form_state);

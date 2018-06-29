@@ -1,5 +1,5 @@
 name: Discount code
-description: Module for generate discount code
+description: Module for generate discount code.
 type: module
 package: Custom
 core: 8.x

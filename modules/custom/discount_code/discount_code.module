@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *
+ * Generate discount code for new register user.
  */
 
 use Drupal\Core\Form\FormStateInterface;
@@ -17,52 +17,16 @@ function discount_code_theme() {
       'variables' => [
         'message' => [],
       ],
-      'template' => 'discount-page',
+      'template' => 'discount',
     ],
   ];
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_form_FORM_ID_alter().
  */
-function discount_code_user_insert(EntityInterface $entity) {
-
-  $code = generate_code();
-
-  $query = \Drupal::database()->insert('discount_code');
-  $query->fields([
-    'uid',
-    'discount',
-  ]);
-  $query->values([
-    $entity->id(),
-    $code,
-  ]);
-  $query->execute();
-}
-
-/**
- * Generate discount code for new user.
- */
-function generate_code() {
-  $space = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  $code = '';
-  $max = strlen($space);
-  for ($i = 0; $i < 10; ++$i) {
-    $code .= $space[random_int(0, $max)];
-  }
-
-  $query = Drupal::database()->select('discount_code', 'discount_code');
-  $query->addField('discount_code', 'discount');
-  $codes = $query->execute()->fetchCol();
-
-  foreach ($codes as $item) {
-    if ($item == $code) {
-      return $code = generate_code();
-    }
-  }
-
-  return $code;
+function discount_code_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['actions']['submit']['#submit'][] = 'discount_code_user_register_form_submit';
 }
 
 /**
@@ -97,16 +61,13 @@ function discount_code_token_info() {
  */
 function discount_code_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = [];
+  $id = Drupal::currentUser()->id();
+  $username = Drupal::currentUser()->getAccountName();
 
-  $q = \Drupal::database()->select('users_field_data', 'ufd');
-  $q->addField('ufd', 'name');
-  $q->orderBy('uid', 'DESC');
-  $username = $q->execute()->fetchField();
-
-  $q2 = \Drupal::database()->select('discount_code', 'dc');
-  $q2->addField('dc', 'discount');
-  $q2->orderBy('uid', 'DESC');
-  $code = $q2->execute()->fetchField();
+  $query = \Drupal::database()->select('discount_code', 'dc');
+  $query->addField('dc', 'discount');
+  $query->condition('uid', $id);
+  $code = $query->execute()->fetchField();
   foreach ($tokens as $name => $original) {
     switch ($name) {
       case 'discount-code':
@@ -122,15 +83,51 @@ function discount_code_tokens($type, $tokens, array $data, array $options, Bubbl
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_ENTITY_TYPE_insert().
  */
-function discount_code_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $form['actions']['submit']['#submit'][] = 'discount_code_form_submit';
+function discount_code_user_insert(EntityInterface $entity) {
+
+  $code = discount_code_generate_code();
+
+  $query = \Drupal::database()->insert('discount_code');
+  $query->fields([
+    'uid',
+    'discount',
+  ]);
+  $query->values([
+    $entity->id(),
+    $code,
+  ]);
+  $query->execute();
+}
+
+/**
+ * Generate discount code for new user.
+ */
+function discount_code_generate_code() {
+  $space = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $code = '';
+  $max = strlen($space);
+  for ($i = 0; $i < 10; ++$i) {
+    $code .= $space[random_int(0, $max)];
+  }
+
+  $query = Drupal::database()->select('discount_code', 'discount_code');
+  $query->addField('discount_code', 'discount');
+  $codes = $query->execute()->fetchCol();
+
+  foreach ($codes as $item) {
+    if ($item == $code) {
+      return $code = discount_code_generate_code();
+    }
+  }
+
+  return $code;
 }
 
 /**
  * Custom submit handler for login form.
  */
-function discount_code_form_submit($form, FormStateInterface $form_state) {
+function discount_code_user_register_form_submit($form, FormStateInterface $form_state) {
   $form_state->setRedirect('discount_code.discount_page');
 }
