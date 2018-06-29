@@ -5,3 +5,19 @@ notes_module.admin_settings:
     _title: 'Notes status settings'
   requirements:
        _permission: 'administer site configuration'
+
+notes_module.admin_config:
+   path: '/admin/config/discount-settings'
+   defaults:
+      _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+      _title: 'Notes status settings'
+   requirements:
+      _permission: 'access administration pages'
+
+notes_module.refresh_button:
+  path: '/refresh_notes'
+  defaults:
+    _form: '\Drupal\notes_module\Form\RefreshNotesForm'
+    _title: 'Refresh all notes'
+  requirements:
+    _permission: 'administer site configuration'

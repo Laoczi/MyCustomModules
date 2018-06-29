@@ -1,8 +1,43 @@
 <?php
 
 /**
- * Implements hook_test_entity_type_insert().
+ * @file
  */
-function notes_module_test_notes_insert() {
 
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function notes_module_form_refresh_notes_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['submit']['#submit'][] =
+    'notes_module_refresh_all_notes_submit';
+}
+
+/**
+ * Start the batch process.
+ */
+function notes_module_refresh_all_notes_submit() {
+  $nids = notes_module_node_id();
+  $batch = [
+    'title' => t('Node processing'),
+    'operations' => [
+      ['refresh_notes_status', [$nids]],
+    ],
+    'finished' => 'refresh_notes_status_finished_callback',
+    'file' => drupal_get_path('module', 'notes_module') .
+      '/notes_module.batch.inc',
+  ];
+  batch_set($batch);
+  batch_process();
+}
+
+/**
+ * Load nodes id.
+ */
+function notes_module_node_id() {
+  $query = \Drupal::database()->select('node', 'n');
+  $query->addField('n', 'nid');
+  $query->condition('type', 'notes');
+  return $result = $query->execute()->fetchAll();
 }
