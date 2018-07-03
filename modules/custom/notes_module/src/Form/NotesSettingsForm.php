@@ -32,9 +32,13 @@ class NotesSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('notes.settings');
 
-    $form['status'] = [
-      '#type' => 'checkbox',
-      '#value' => $this->t('Change status of all notes N/A'),
+    $form['reset'] = [
+      '#type' => 'submit',
+      '#value' => 'Reset all notes status',
+    ];
+    $form['refresh'] = [
+      '#type' => 'submit',
+      '#value' => 'Refresh all notes status',
     ];
 
     $form['or'] = [
@@ -47,6 +51,7 @@ class NotesSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Choose actual date'),
       '#default_value' => $config->get('date'),
     ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -55,7 +60,6 @@ class NotesSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->configFactory->getEditable('notes.settings')
-      ->set('status', $form_state->getValue('status'))
       ->set('date', $form_state->getValue('date'))
       ->save();
 
@@ -63,4 +67,3 @@ class NotesSettingsForm extends ConfigFormBase {
   }
 
 }
-
