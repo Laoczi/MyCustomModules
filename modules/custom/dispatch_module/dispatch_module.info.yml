@@ -1,0 +1,5 @@
+name: Dispatch module
+description: This module is provide email dispatch to users.
+type: module
+package: Custom
+core: 8.x

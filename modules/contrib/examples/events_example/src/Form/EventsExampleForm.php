@@ -13,7 +13,7 @@ use Drupal\events_example\Event\IncidentReportEvent;
  * Implements the SimpleForm form controller.
  *
  * The submitForm() method of this class demonstrates using the event dispatcher
- * service to dispatch an event.
+ * service to dispatch_module an event.
  *
  * @see \Drupal\events_exampl\Event\IncidentEvents
  * @see \Drupal\events_example\Event\IncidentReportEvent

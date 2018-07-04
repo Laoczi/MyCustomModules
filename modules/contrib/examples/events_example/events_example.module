@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Demonstrates how to subscribe to and dispatch events.
+ * Demonstrates how to subscribe to and dispatch_module events.
  */
 
 /**
@@ -12,7 +12,7 @@
  * Demonstrates subscribing to, and dispatching, events.
  *
  * Events allow for different components of the system to interact and
- * communicate with each other. Modules can either dispatch events, subscribe to
+ * communicate with each other. Modules can either dispatch_module events, subscribe to
  * events, or both.
  *
  * Subscribing to an event allows a module to declare that it would like to be
@@ -56,7 +56,7 @@
  * - Defining an event class that extends
  *   \Symfony\Component\EventDispatcher\Event
  *   Example: \Drupal\events_example\Event\IncidentReportEvent
- * - Use the 'event_dispatcher' service in your code to dispatch an event and
+ * - Use the 'event_dispatcher' service in your code to dispatch_module an event and
  *   provide an event object as an argument. Example:
  *   \Drupal\events_example\Form\EventsExampleForm::submitForm()
  *

@@ -1,0 +1,7 @@
+dispatch_module.admin_settings:
+  path: '/dispatch'
+  defaults:
+    _form: '\Drupal\dispatch_module\Form\DispatchForm'
+    _title: 'Settings email dispatch'
+  requirements:
+    _permission: 'access administration pages'
