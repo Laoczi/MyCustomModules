@@ -23,7 +23,7 @@ content:
         third_party_settings: {  }
     note_status:
         label: hidden
-        type: boolean
+        type: string
         weight: 102
         settings: {  }
         third_party_settings: {  }

@@ -2,9 +2,16 @@
 
 /**
  * @file
+ * Module provide custom content type - notes.
+ *
+ * User can create note nodes. Note contain 3 fields: title, body(main text),
+ * status. User can upgrade status field as like in configuration.
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+
+
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -26,7 +33,8 @@ function notes_module_notes_settings_form_reset_submit() {
       ['notes_module_reset_status_process', [$data]],
     ],
     'finished' => 'notes_module_reset_status_finished_callback',
-    'file' => drupal_get_path('module', 'notes_module') . '/notes_module.batch.inc',
+    'file' => drupal_get_path('module', 'notes_module') .
+      '/notes_module.batch.inc',
   ];
 
   batch_set($batch);
@@ -44,7 +52,8 @@ function notes_module_notes_settings_form_refresh_submit($form, &$form_state) {
       ['notes_module_refresh_status_process', [$data]],
     ],
     'finished' => 'notes_module_refresh_status_finished_callback',
-    'file' => drupal_get_path('module', 'notes_module') . '/notes_module.batch.inc',
+    'file' => drupal_get_path('module', 'notes_module') .
+      '/notes_module.batch.inc',
   ];
 
   batch_set($batch);

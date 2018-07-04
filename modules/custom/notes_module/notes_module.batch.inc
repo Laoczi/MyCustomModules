@@ -53,7 +53,7 @@ function notes_module_reset_status_process($data, &$context) {
 
   foreach ($context['sandbox']['items'] as $value) {
     $query = Drupal::database()->update('node__note_status');
-    $query->fields(['note_status_value' => '']);
+    $query->fields(['note_status_value' => NULL]);
     $query->condition('entity_id', $value);
     $query->execute();
   }

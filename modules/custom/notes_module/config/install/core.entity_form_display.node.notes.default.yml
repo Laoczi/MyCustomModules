@@ -25,7 +25,7 @@ content:
         label: hidden
         type: Boolean
         weight: 102
-        settings: {  }
+        settings: {}
         third_party_settings: {  }
 
     links:
