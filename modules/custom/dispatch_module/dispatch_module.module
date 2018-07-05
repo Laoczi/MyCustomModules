@@ -9,60 +9,18 @@ use Drupal\Core\Mail\MailManager;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
- * Implements hook_cron().
- */
-function dispatch_module_cron() {
-  $queue = \Drupal::queue('email_dispatch');
-  $item = $queue->claimItem();
-  $module = 'dispatch_module';
-  $key = 'email_dispatch';
-
-  foreach ($item as $value) {
-    $to = $value->data['email'];
-    $params['name'] = $value->data['name'];
-    $params['uid'] = $value->data['uid'];
-    MailManager::mail($module, $key, $to, $params);
-    $queue->deleteItem($value);
-  }
-
-
-}
-
-/**function dispatch_module_cron() {
-
-  $queue = \Drupal::queue('email_dispatch');
-  $end = time() + 30;
-  while (time() < $end && ($item = $queue->claimItem())) {
-
-    $module = 'dispatch_module';
-    $key = 'email_dispatch';
-    $params['name'] = $item->data['name'];
-    $params['site_email'] = $item->data['site_email'];
-    $params['message'] = $item->data['message'];
-    $to = $item->data['mail'];
-    MailManager::mail($module, $key, $to, $params);
-
-    $queue->deleteItem($item);
-
-  }
-}
-
-/**
  * Implements hook_mail().
  */
-/**function dispatch_module_mail($key, &$message, $params) {
+function dispatch_module_mail($key, &$message, $params) {
   switch ($key) {
     case 'email_dispatch':
 
-      $message['subject'] = t('Email from @site_email', [
-        '@site_email' => $params['site_email'],
-      ]);
+
+      $message['subject'] = t('Email from phpmodule2.test');
       $message['body'][] =
-        t('Hello @name, this message for you <br> @message', [
-          '@name' => $params['name'],
+        t('@message', [
           '@message' => $params['message'],
         ]);
-
       break;
   }
 }
@@ -70,25 +28,25 @@ function dispatch_module_cron() {
 /**
  * Implements hook_token_info().
  */
-/**function dispatch_module_token_info() {
+function dispatch_module_token_info() {
   $type = [
     'name' => t('Dispatch'),
     'description' => t('Dispatch token'),
   ];
-  $discount['username'] = [
+  $username['username'] = [
     'name' => t('Username'),
     'description' => t('User name'),
   ];
-  $username['site_email'] = [
+  $site_email['site_email'] = [
     'name' => t('Site email'),
     'description' => t('Site email'),
   ];
   return [
-    'types' => ['discount' => $type],
+    'types' => ['dispatch' => $type],
     'tokens' => [
       'dispatch' => [
-        'username' => $discount['username'],
-        'site_email' => $username['site_email'],
+        'username' => $username['username'],
+        'site_email' => $site_email['site_email'],
       ],
     ],
   ];
@@ -97,4 +55,21 @@ function dispatch_module_cron() {
 /**
  * Implements hook_tokens().
  */
+function dispatch_module_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
 
+  $replacements = [];
+  $site_config = \Drupal::config('system.site');
+  $site_email = $site_config->get('mail');
+  foreach ($tokens as $name => $original) {
+    switch ($name) {
+      case 'username':
+        $replacements[$original] = $username;
+        break;
+
+      case 'site_email':
+        $replacements[$original] = $site_email;
+        break;
+    }
+  }
+  return $replacements;
+}

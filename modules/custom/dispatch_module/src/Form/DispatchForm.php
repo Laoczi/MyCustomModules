@@ -21,9 +21,6 @@ class DispatchForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-
-    $queue = \Drupal::queue('email_dispatch');
-
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => t('Write your message here'),
@@ -43,24 +40,32 @@ class DispatchForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $queue = \Drupal::queue('email_dispatch');
+    $token_service = \Drupal::token();
 
     $query = \Drupal::database()->select('users_field_data', 'ufd');
-    $query->fields('ufd', ['uid', 'name', 'mail']);
+    $query->fields('ufd', ['name', 'mail']);
     $query->condition('status', 1);
     $result = $query->execute();
+    $message = $form_state->getValue('message');
 
+    $queue = \Drupal::queue('email_dispatch');
     $queue->createQueue();
 
     foreach ($result as $value) {
       $queue->createItem([
-        'uid' => $value->uid,
         'name' => $value->name,
-        'email' => $value->mail,
-        'message' => $form_state->getValue('message'),
+        'mail' => $value->mail,
+        'message' => $message,
       ]);
     }
-
   }
 
 }
+
+/**
+ *
+   Hello, [dispatch:username] !
+   We have a new vacancy for developers if interesting sand
+   your resume to [dispatch:site_email].
+   Good luck!
+ */
