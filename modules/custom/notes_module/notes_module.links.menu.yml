@@ -9,4 +9,3 @@ notes_module.admin_config:
   parent: system.admin_config
   route_name: notes_module.admin_config
   weight: -50
-

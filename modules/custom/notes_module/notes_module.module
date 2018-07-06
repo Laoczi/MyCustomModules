@@ -9,9 +9,6 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-
-
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -66,13 +63,17 @@ function notes_module_notes_settings_form_refresh_submit($form, &$form_state) {
 function notes_module_load_data() {
   $output = [];
 
-  $query = Drupal::database()->select('node_field_data', 'nfd');
-  $query->addField('nfd', 'nid');
-  $query->condition('type', 'notes');
-  $result = $query->execute();
+  $ids = \Drupal::entityQuery('node')
+    ->condition('uid', '0', '>')
+    ->condition('type', 'notes')
+    ->execute();
+  //$query = Drupal::database()->select('node_field_data', 'nfd');
+  //$query->addField('nfd', 'nid');
+  //$query->condition('type', 'notes');
+  // $result = $query->execute();
 
-  foreach ($result as $node) {
-    $output[] = $node->nid;
+  foreach ($ids as $id) {
+    $output[] = $id;
   }
   return $output;
 }

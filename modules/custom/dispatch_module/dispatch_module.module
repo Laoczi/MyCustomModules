@@ -3,10 +3,7 @@
 /**
  * @file
  */
-
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Mail\MailManager;
-use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Implements hook_mail().
@@ -14,7 +11,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 function dispatch_module_mail($key, &$message, $params) {
   switch ($key) {
     case 'email_dispatch':
-
 
       $message['subject'] = t('Email from phpmodule2.test');
       $message['body'][] =
@@ -56,7 +52,6 @@ function dispatch_module_token_info() {
  * Implements hook_tokens().
  */
 function dispatch_module_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
-
   $replacements = [];
   $site_config = \Drupal::config('system.site');
   $site_email = $site_config->get('mail');

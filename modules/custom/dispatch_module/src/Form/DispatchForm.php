@@ -43,7 +43,7 @@ class DispatchForm extends FormBase {
     $token_service = \Drupal::token();
 
     $query = \Drupal::database()->select('users_field_data', 'ufd');
-    $query->fields('ufd', ['name', 'mail']);
+    $query->fields('ufd', ['uid', 'name', 'mail']);
     $query->condition('status', 1);
     $result = $query->execute();
     $message = $form_state->getValue('message');
@@ -53,10 +53,12 @@ class DispatchForm extends FormBase {
 
     foreach ($result as $value) {
       $queue->createItem([
+        'uid' => $value->uid,
         'name' => $value->name,
         'mail' => $value->mail,
         'message' => $message,
       ]);
+
     }
   }
 
@@ -64,8 +66,8 @@ class DispatchForm extends FormBase {
 
 /**
  *
-   Hello, [dispatch:username] !
-   We have a new vacancy for developers if interesting sand
-   your resume to [dispatch:site_email].
-   Good luck!
+ * Hello, [dispatch:username] !
+ * We have a new vacancy for developers if interesting sand
+ * your resume to [dispatch:site_email].
+ * Good luck!
  */
