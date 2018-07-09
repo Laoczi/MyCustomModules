@@ -5,6 +5,8 @@
  */
 function notes_module_refresh_status_process($data, &$context) {
   $config = \Drupal::config('notes.settings');
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+
   $config_date = $config->get('date');
   $config_date = strtotime($config_date);
   $config_date =
@@ -13,24 +15,20 @@ function notes_module_refresh_status_process($data, &$context) {
   $context['sandbox']['items'] = $data;
 
   foreach ($context['sandbox']['items'] as $value) {
-    $query = Drupal::database()->select('node_field_data', 'nfd');
-    $query->addField('nfd', 'created');
-    $query->condition('nid', $value);
-    $note_date = $query->execute()->fetchField();
+    $note = $storage->load($value);
+    $note_date = $note->created->value;
     $note_date =
       Drupal::service('date.formatter')->format($note_date, 'html_date');
 
     if ($note_date < $config_date) {
-      $query = Drupal::database()->update('node__note_status');
-      $query->fields(['note_status_value' => 0]);
-      $query->condition('entity_id', $value);
-      $query->execute();
+      $node = $storage->load($value);
+      $node->note_status->value = 0;
+      $node->save();
     }
     else {
-      $query = Drupal::database()->update('node__note_status');
-      $query->fields(['note_status_value' => 1]);
-      $query->condition('entity_id', $value);
-      $query->execute();
+      $node = $storage->load($value);
+      $node->note_status->value = 1;
+      $node->save();
     }
   }
 
@@ -50,14 +48,13 @@ function notes_module_refresh_status_finished_callback($success, $results, $oper
  */
 function notes_module_reset_status_process($data, &$context) {
   $context['sandbox']['items'] = $data;
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
 
   foreach ($context['sandbox']['items'] as $value) {
+    $node = $storage->load($value);
+    $node->note_status->value = 0;
+    $node->save();
 
-    $query = Drupal::entityQuery('node')->
-    $query = Drupal::database()->update('node__note_status');
-    $query->fields(['note_status_value' => NULL]);
-    $query->condition('entity_id', $value);
-    $query->execute();
   }
 }
 

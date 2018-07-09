@@ -40,7 +40,7 @@ class DispatchForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $token_service = \Drupal::token();
+
 
     $query = \Drupal::database()->select('users_field_data', 'ufd');
     $query->fields('ufd', ['uid', 'name', 'mail']);

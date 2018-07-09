@@ -1,1 +1,11 @@
-dispatch_module
+dispatch_module.admin_page:
+  title: Email dispatch
+  route_name: dispatch_module.admin_page
+  parent: dispatch_module.admin_config:
+  weight: 1
+
+dispatch_module.admin_config:
+  title: Dispatch
+  parent: system.admin_config
+  route_name: dispatch_module.admin_config:
+  weight: -50

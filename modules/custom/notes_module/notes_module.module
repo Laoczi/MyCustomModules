@@ -64,13 +64,9 @@ function notes_module_load_data() {
   $output = [];
 
   $ids = \Drupal::entityQuery('node')
-    ->condition('uid', '0', '>')
+    ->condition('uid', 0, '>=')
     ->condition('type', 'notes')
     ->execute();
-  //$query = Drupal::database()->select('node_field_data', 'nfd');
-  //$query->addField('nfd', 'nid');
-  //$query->condition('type', 'notes');
-  // $result = $query->execute();
 
   foreach ($ids as $id) {
     $output[] = $id;

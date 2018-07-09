@@ -1,6 +1,14 @@
-dispatch_module.admin_settings:
+dispatch_module.admin_page:
   path: '/dispatch'
   defaults:
     _form: '\Drupal\dispatch_module\Form\DispatchForm'
   requirements:
     _permission: 'access administration pages'
+
+dispatch_module.admin_config:
+   path: '/admin/config/dispatch'
+   defaults:
+      _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+      _title: 'Notes status settings'
+   requirements:
+      _permission: 'access administration pages'

@@ -3,6 +3,7 @@
 /**
  * @file
  */
+
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
@@ -11,11 +12,12 @@ use Drupal\Core\Render\BubbleableMetadata;
 function dispatch_module_mail($key, &$message, $params) {
   switch ($key) {
     case 'email_dispatch':
+      $token_service = \Drupal::token();
 
       $message['subject'] = t('Email from phpmodule2.test');
       $message['body'][] =
         t('@message', [
-          '@message' => $params['message'],
+          '@message' => $token_service->replace($params['message']),
         ]);
       break;
   }
@@ -53,8 +55,11 @@ function dispatch_module_token_info() {
  */
 function dispatch_module_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $replacements = [];
-  $site_config = \Drupal::config('system.site');
-  $site_email = $site_config->get('mail');
+  $site_email = \Drupal::config('system.site')->get('mail');
+
+  $queue = \Drupal::queue('email_dispatch')->claimItem();
+  $query = \Drupal::entityTypeManager()->getStorage('user')->load($queue->data['uid']);
+  $username = $query;
   foreach ($tokens as $name => $original) {
     switch ($name) {
       case 'username':

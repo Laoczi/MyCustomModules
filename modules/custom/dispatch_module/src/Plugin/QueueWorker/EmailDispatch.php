@@ -27,7 +27,7 @@ class EmailDispatch extends QueueWorkerBase {
     $module = 'dispatch_module';
     $key = 'email_dispatch';
     $to = $data['mail'];
-    $params['message'] = $token_service->replace($data['message']);
+    $params['message'] = $data['message'];
 
     $langcode = 'en';
     $mailManager->mail($module, $key, $to, $langcode, $params);
