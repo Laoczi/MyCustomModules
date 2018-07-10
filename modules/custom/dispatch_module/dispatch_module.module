@@ -2,6 +2,10 @@
 
 /**
  * @file
+ * Module provide to sand emails for all users.
+ *
+ * Site admin can configurate a letter for email dispatch, and send it
+ * to all register users.
  */
 
 use Drupal\Core\Render\BubbleableMetadata;
@@ -10,9 +14,10 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Implements hook_mail().
  */
 function dispatch_module_mail($key, &$message, $params) {
+  $token_service = Drupal::token();
+
   switch ($key) {
     case 'email_dispatch':
-      $token_service = \Drupal::token();
 
       $message['subject'] = t('Email from phpmodule2.test');
       $message['body'][] =
@@ -57,13 +62,17 @@ function dispatch_module_tokens($type, $tokens, array $data, array $options, Bub
   $replacements = [];
   $site_email = \Drupal::config('system.site')->get('mail');
 
-  $queue = \Drupal::queue('email_dispatch')->claimItem();
-  $query = \Drupal::entityTypeManager()->getStorage('user')->load($queue->data['uid']);
-  $username = $query;
+  $queue = Drupal::queue('users');
+  $item = $queue->claimItem();
+  $uid = $item->data['uid'];
+  $user = \Drupal::entityTypeManager()->getStorage('user')->load($uid);
+  $username = $user->name->value;
   foreach ($tokens as $name => $original) {
+
     switch ($name) {
       case 'username':
         $replacements[$original] = $username;
+        $queue->deleteItem($item);
         break;
 
       case 'site_email':

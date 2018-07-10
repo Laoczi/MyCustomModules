@@ -3,12 +3,12 @@
 namespace Drupal\dispatch_module\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Generate the form for contact with administrator.
  */
-class DispatchForm extends FormBase {
+class DispatchForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -20,13 +20,25 @@ class DispatchForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [
+      'dispatch.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $config = \Drupal::config('dispatch.settings');
+
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => t('Write your message here'),
       '#required' => TRUE,
       '#description' => '[dispatch:username] to add user name <br>
                          [dispatch:site_email] to add site email.',
+      '#default_value' => $config->get('message'),
     ];
     $form['submit'] = [
       '#type' => 'submit',
@@ -40,34 +52,42 @@ class DispatchForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->configFactory->getEditable('dispatch.settings')
+      ->set('message', $form_state->getValue('message'))
+      ->save();
 
+    $queue = \Drupal::queue('users');
+    $queue->createQueue();
+    $query = \Drupal::entityTypeManager()->getStorage('user')->getQuery()
+      ->condition('status', 1)
+      ->execute();
+    foreach ($query as $id) {
+      $queue->createItem([
+        'uid' => $id,
+      ]);
+    }
 
-    $query = \Drupal::database()->select('users_field_data', 'ufd');
-    $query->fields('ufd', ['uid', 'name', 'mail']);
-    $query->condition('status', 1);
-    $result = $query->execute();
+    $token_service = \Drupal::token();
     $message = $form_state->getValue('message');
+    $query = \Drupal::entityTypeManager()->getStorage('user')->getQuery()
+      ->condition('status', 1)
+      ->sort('uid')
+      ->execute();
 
     $queue = \Drupal::queue('email_dispatch');
     $queue->createQueue();
 
-    foreach ($result as $value) {
-      $queue->createItem([
-        'uid' => $value->uid,
-        'name' => $value->name,
-        'mail' => $value->mail,
-        'message' => $message,
-      ]);
-
+    foreach ($query as $id) {
+      $user = \Drupal::entityTypeManager()->getStorage('user')->load($id);
+      $uid = $user->uid->value;
+      $name = $user->name->value;
+      $mail = $user->mail->value;
+      $data['uid'] = $uid;
+      $data['name'] = $name;
+      $data['mail'] = $mail;
+      $data['message'] = $token_service->replace($message);
+      $queue->createItem($data);
     }
   }
 
 }
-
-/**
- *
- * Hello, [dispatch:username] !
- * We have a new vacancy for developers if interesting sand
- * your resume to [dispatch:site_email].
- * Good luck!
- */

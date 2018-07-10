@@ -1,5 +1,5 @@
 dispatch_module.admin_page:
-  path: '/dispatch'
+  path: '/admin/config/dispatch/email_dispatch'
   defaults:
     _form: '\Drupal\dispatch_module\Form\DispatchForm'
   requirements:
